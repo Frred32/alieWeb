@@ -25,7 +25,12 @@ app.post('/api/chat', async (req, res) => {
     // Call the AI with the messages
     const responseText = await provider.chatCompletion(messages, { model: 'gpt-4o-free' });
 
-    console.log('AI Response:', responseText); // Log the AI response
+    console.log('Raw AI Response:', responseText); // Log the raw response
+
+    // Check if response is valid
+    if (!responseText || typeof responseText !== 'string' || responseText.trim() === '') {
+      return res.status(500).json({ error: 'Empty response from AI' });
+    }
 
     res.json({ response: responseText });
   } catch (error) {
