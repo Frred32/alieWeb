@@ -31,8 +31,9 @@ app.post('/api/generate', (req, res) => {
 
 // Define a route for the chat API
 app.post('/api/chat', async (req, res) => {
-  const messages = req.body.messages || [];
-  const { key } = req.body;
+  const { messages, key } = req.body;
+
+  console.log('Received request:', req.body); // Log incoming request
 
   if (!key || !keys[key]) {
     return res.status(401).json({ error: 'Invalid or missing key' });
