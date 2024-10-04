@@ -16,6 +16,8 @@ app.post('/api/chat', async (req, res) => {
     return res.status(400).json({ error: 'Messages should be a non-empty array' });
   }
 
+  console.log('Received messages:', messages); // Log the received messages
+
   try {
     const GPT4js = await getGPT4js();
     const provider = GPT4js.createProvider('Nextway'); // Adjust provider as needed
@@ -27,7 +29,7 @@ app.post('/api/chat', async (req, res) => {
 
     res.json({ response: responseText });
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error during AI processing:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
