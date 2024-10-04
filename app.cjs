@@ -9,8 +9,9 @@ app.use(express.json());
 
 // Define a route for the chat API
 app.post('/api/chat', async (req, res) => {
-  const messages = req.body.messages || [];
+  const messages = req.body.messages;
 
+  // Validate input
   if (!Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'Messages should be a non-empty array' });
   }
@@ -18,13 +19,13 @@ app.post('/api/chat', async (req, res) => {
   try {
     const GPT4js = await getGPT4js();
     const provider = GPT4js.createProvider('Nextway'); // Adjust provider as needed
-    
-    // Ensure messages are properly formatted
-    const text = await provider.chatCompletion(messages, { model: 'gpt-4o-free' });
-    
-    console.log('AI Response:', text); // Log the AI response
 
-    res.json({ response: text });
+    // Call the AI with the messages
+    const responseText = await provider.chatCompletion(messages, { model: 'gpt-4o-free' });
+
+    console.log('AI Response:', responseText); // Log the AI response
+
+    res.json({ response: responseText });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
