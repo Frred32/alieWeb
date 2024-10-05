@@ -22,16 +22,17 @@ app.post('/api/chat', async (req, res) => {
         const GPT4js = await getGPT4js();
         const provider = GPT4js.createProvider('Nextway');
 
+        // Call the AI with the messages
         const response = await provider.chatCompletion(messages, { model: 'gpt-4o-free' });
+        console.log('Raw AI Response:', response); // Log the raw response
 
-        console.log('Raw AI Response:', response);
-
+        // Check if response is valid
         if (!response || !response.choices || response.choices.length === 0) {
             console.error('Invalid response structure:', response);
             return res.status(500).json({ error: 'Empty response from AI' });
         }
 
-        const responseText = response.choices[0].message.content; // Adjust this based on actual response structure
+        const responseText = response.choices[0].message?.content || "No content returned"; // Adjust based on actual response structure
         res.json({ response: responseText });
     } catch (error) {
         console.error('Error during AI processing:', error);
@@ -39,6 +40,7 @@ app.post('/api/chat', async (req, res) => {
     }
 });
 
+// Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
